@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+import { init } from 'svelte/internal';
 
 const SCENE = new THREE.Scene();
 const CAMERA = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -249,7 +250,22 @@ export const changeLength = (length: number): void => {
 ////////////
 
 ////////////
+
+// TODO: Save the initial ridge positions as currently when ridges are changed then it will 'stack'.
+// UPDATE1: using leftInitarr and rightInitarr for now to remember the positions
+
+let leftInitarr = [];
+let rightInitarr = [];
+//
+
 export const changeLeftRidge = (value: number): void => {
+
+    if(!leftInitarr.length){
+        cube.geometry.attributes.position.array.forEach(element => {
+            leftInitarr.push(element);
+        });
+    }
+
     let temparr = [];
     let checkVal = value * 1000;
 
@@ -260,13 +276,13 @@ export const changeLeftRidge = (value: number): void => {
     if (checkVal > 0) {
         console.log('val is positive', value);
         //back
-        temparr[33] = temparr[33] + value;
-        temparr[30] = temparr[30] - value;
-        temparr[27] = temparr[27] + value;
-        temparr[24] = temparr[24] - value;
+        temparr[33] = leftInitarr[33] + value;
+        temparr[30] = leftInitarr[30] - value;
+        temparr[27] = leftInitarr[27] + value;
+        temparr[24] = leftInitarr[24] - value;
         //left
-        temparr[36] = temparr[36] + value;
-        temparr[42] = temparr[42] + value;
+        temparr[36] = leftInitarr[36] + value;
+        temparr[42] = leftInitarr[42] + value;
         //right
         //temparr[21] = temparr[21] - value;
         //temparr[15] = temparr[15] - value;
@@ -277,19 +293,19 @@ export const changeLeftRidge = (value: number): void => {
         console.log('val is negative', value);
         value = value * -1;
         //back
-        temparr[33] = temparr[33] - value;
-        temparr[30] = temparr[30] + value;
-        temparr[27] = temparr[27] - value;
-        temparr[24] = temparr[24] + value;
+        temparr[33] = leftInitarr[33] - value;
+        temparr[30] = leftInitarr[30] + value;
+        temparr[27] = leftInitarr[27] - value;
+        temparr[24] = leftInitarr[24] + value;
         //left
-        temparr[36] = temparr[36] - value;
-        temparr[42] = temparr[42] - value;
+        temparr[36] = leftInitarr[36] - value;
+        temparr[42] = leftInitarr[42] - value;
         //right
         //temparr[21] = temparr[21] + value;
         //temparr[15] = temparr[15] + value;
         //top
         //temparr[48] = temparr[48] + value;
-        temparr[51] = temparr[51] - value;
+        temparr[51] = leftInitarr[51] - value;
     };
 
 
@@ -311,6 +327,13 @@ export const changeLeftRidge = (value: number): void => {
 
 ////////////
 export const changeRightRidge = (value: number): void => {
+    
+    if(!rightInitarr.length){
+        cube.geometry.attributes.position.array.forEach(element => {
+            rightInitarr.push(element);
+        });
+    }
+
     let temparr = [];
     let checkVal = value * 1000;
 
@@ -321,16 +344,16 @@ export const changeRightRidge = (value: number): void => {
     if (checkVal > 0) {
         console.log('val is positive', value);
         //back
-        temparr[33] = temparr[33] + value;
-        temparr[30] = temparr[30] - value;
-        temparr[27] = temparr[27] + value;
-        temparr[24] = temparr[24] - value;
+        temparr[33] = rightInitarr[33] + value;
+        temparr[30] = rightInitarr[30] - value;
+        temparr[27] = rightInitarr[27] + value;
+        temparr[24] = rightInitarr[24] - value;
         //left
         //temparr[36] = temparr[36] + value;
         //temparr[42] = temparr[42] + value;
         //right
-        temparr[21] = temparr[21] - value;
-        temparr[15] = temparr[15] - value;
+        temparr[21] = rightInitarr[21] - value;
+        temparr[15] = rightInitarr[15] - value;
         //top
         temparr[48] = temparr[48] - value;
         //temparr[51] = temparr[51] + value;
@@ -338,18 +361,18 @@ export const changeRightRidge = (value: number): void => {
         console.log('val is negative', value);
         value = value * -1;
         //back
-        temparr[33] = temparr[33] - value;
-        temparr[30] = temparr[30] + value;
-        temparr[27] = temparr[27] - value;
-        temparr[24] = temparr[24] + value;
+        temparr[33] = rightInitarr[33] - value;
+        temparr[30] = rightInitarr[30] + value;
+        temparr[27] = rightInitarr[27] - value;
+        temparr[24] = rightInitarr[24] + value;
         //left
         //temparr[36] = temparr[36] - value;
         //temparr[42] = temparr[42] - value;
         //right
-        temparr[21] = temparr[21] + value;
-        temparr[15] = temparr[15] + value;
+        temparr[21] = rightInitarr[21] + value;
+        temparr[15] = rightInitarr[15] + value;
         //top
-        temparr[48] = temparr[48] + value;
+        temparr[48] = rightInitarr[48] + value;
         //temparr[51] = temparr[51] - value;
     };
 
@@ -461,6 +484,7 @@ export const addSolarPanel = (width: number, length: number): void => {
     SCENE.add(solarPanel);
 }
 
+// Disable for now due to switching to BufferGeometry from BoxGeometry
 /*
 export const toggleShadows = (): void => {
 
