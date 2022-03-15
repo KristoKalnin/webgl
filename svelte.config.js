@@ -1,7 +1,9 @@
 import adapter from '@sveltejs/adapter-auto';
+import staticAdapter from '@sveltejs/adapter-static';
+import nodeAdapter from '@sveltejs/adapter-node';
+
 import preprocess from 'svelte-preprocess';
 import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
-
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -10,7 +12,7 @@ const config = {
 	preprocess: preprocess(),
 
 	kit: {
-        adapter: adapter(),
+        adapter: staticAdapter(),
 
         vite: {
             test: {

@@ -6,6 +6,9 @@ Powered by
 
 + three.js
 
+## Deployed example as of 15.03.2022
+[VIEW](https://solarflare.netlify.app/)
+
 ## Get started
 
 1. Clone the repo
